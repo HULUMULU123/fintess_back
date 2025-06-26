@@ -160,8 +160,7 @@ class BodyMeasurementSerializer(serializers.ModelSerializer):
             'bicep_left',
             'thigh_right',
             'thigh_left',
-            'buttock_left',
-            'buttock_right',
+            'buttock',
             'created_at',
             
         ]
