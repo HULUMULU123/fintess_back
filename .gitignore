@@ -1,0 +1,67 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Env
+.env
+*.env
+venv/
+env/
+.venv/
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Django
+db.sqlite3
+*.log
+*.pot
+*.pyc
+*.mo
+media/
+staticfiles/
+static_root/
+local_settings.py
+
+# Migrations (если хочешь их игнорировать — но **не рекомендуется** в командах)
+# **Важно: не игнорируй миграции, если работаешь в команде**
+# */migrations/*.py
+# !*/migrations/__init__.py
+
+# Coverage / testing
+.coverage
+coverage.xml
+htmlcov/
+pytest_cache/
+.tox/
+.nox/
+.pytest_cache/
+
+# Build
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# MyPy / Lint
+.mypy_cache/
+.dmypy.json
+.pyre/
+.pytype/
+
+# VS Code / JetBrains
+*.code-workspace
+*.iml
+
+# Local dev config
+*.sqlite3
