@@ -83,7 +83,7 @@ class DashboardDataView(APIView):
         if not user.is_authenticated:
             return Response({"detail": "Unauthorized"}, status=401)
         # Получаем рандомную цитату, если есть
-        quote = Quote.objects.first()
+        quote = Quote.objects.order_by('?').first()
         
         if quote:
             serializer = QuoteSerializer(quote)
