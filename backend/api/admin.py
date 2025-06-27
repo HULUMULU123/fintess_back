@@ -62,10 +62,10 @@ class WorkoutSuperSetExerciseForm(forms.ModelForm):
         
         if self.instance and self.instance.workout_superset_id:
             ws = self.instance.workout_superset
-        print(ws)
+        # print(ws)
         # если имеется уже сохранённый суперсет, фильтруем упражнения
         if ws and ws.superset_id:
-            print(self.fields)
+            # print(self.fields)
             self.fields["superset_exercise"].queryset = SuperSetExercise.objects.filter(
                 superset_id=ws.superset_id
             ).order_by("order")

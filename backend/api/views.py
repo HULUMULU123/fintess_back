@@ -28,7 +28,7 @@ from datetime import datetime, timedelta
 @api_view(['POST'])
 def test_view(request):
     data = request.data
-    print("Полученные данные:", data)
+    # print("Полученные данные:", data)
     return Response({"message": "Данные успешно получены"})
 
 
@@ -51,7 +51,7 @@ class TelegramLoginView(APIView):
         
         refresh = RefreshToken.for_user(user)
         
-        print('access:',refresh.access_token, 'refresh',refresh)
+        # print('access:',refresh.access_token, 'refresh',refresh)
         return Response({
             "detail": "Authenticated",
              "access": str(refresh.access_token),
@@ -78,7 +78,7 @@ class DashboardDataView(APIView):
     def get(self, request):
         
         user = request.user
-        print(request.headers)
+        # print(request.headers)
         now = timezone.now()
         if not user.is_authenticated:
             return Response({"detail": "Unauthorized"}, status=401)
@@ -116,7 +116,7 @@ class DashboardDataView(APIView):
             }
             for single_date in date_range
         ]
-        print(week_data)
+        # print(week_data)
         # Ближайшая тренировка, которая еще не прошла
         next_training = Workout.objects.filter(user=user, day__gte=now).order_by('day').first()
         if next_training:
@@ -134,9 +134,10 @@ class DashboardDataView(APIView):
             serializer = WishBodyResultSerializer(wish, context={'request': request})
             wish_data = serializer.data
         except WishBodyResult.DoesNotExist:
-            print('sorry')
+            # print('sorry')
+            pass
 
-        print(wish_data, 'wish_data')
+        # print(wish_data, 'wish_data')
         
         
 
@@ -156,7 +157,7 @@ class TrainPlanDataView(APIView):
         user = request.user
         if not user.is_authenticated:
             return Response({"detail": "Unauthorized"}, status=401)
-        print('uio')
+        # print('uio')
         today = datetime.today()
         start_of_week = today - timedelta(days=today.weekday())  # Понедельник
         end_of_week = start_of_week + timedelta(days=6)  # Воскресенье
@@ -194,7 +195,7 @@ class TrainPlanDataView(APIView):
                     
                 }
                 result.append(empty_day_data)
-        print(result, 'result')
+        # print(result, 'result')
         return Response({"user_trainings": result})
 
     def get_weekday_name(self, weekday_index):
@@ -251,7 +252,7 @@ class ShowBodyStatistic(APIView):
             
         else:
             serializer_data = {'error': 'There is no items'}
-        print(serializer_data)
+        # print(serializer_data)
         return Response({'body_statistics': serializer_data,
                          'weight_difference': diff,
                          'time_interval': time_interval,
@@ -289,7 +290,7 @@ class ShowBodyStatistic(APIView):
             
             response_data = serializer.data.copy()
             response_data['weight_difference'] = diff
-            print('response', response_data)
+            # print('response', response_data)
             return Response(response_data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -305,7 +306,7 @@ class ShowProgressPhoto(APIView):
         
         progress_photos = ProgressPhoto.objects.filter(user=user).order_by('date')
         photo_serializer = PhotoSerializer(progress_photos, many=True)
-        print(photo_serializer.data)
+        # print(photo_serializer.data)
         return Response({
             'progress_photos': photo_serializer.data
         })
@@ -328,7 +329,7 @@ class ShowProgressPhoto(APIView):
         if serializer.is_valid():
             serializer.save()
             
-            print('response', serializer.data)
+            # print('response', serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -341,7 +342,7 @@ class ShowUsersVitamins(APIView):
         
         user_vitamins = UserVitamin.objects.filter(user=user).select_related('vitamin')
         serializer = UserVitaminSerializer(user_vitamins, many=True)
-        print(serializer.data)
+        # print(serializer.data)
         return Response({'vitamins': serializer.data}, status=200)
     
 class ProfileMotivationInfo(APIView):
@@ -376,7 +377,7 @@ class Training(APIView):
             workout = Workout.objects.get(id=pk)
         
             serializer = WorkoutSerializer(workout)
-            print(serializer.data, 'workout find')
+            # print(serializer.data, 'workout find')
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Workout.DoesNotExist:
             return Response({'error': 'No valid items found'}, status=status.HTTP_404_NOT_FOUND)
@@ -427,12 +428,12 @@ class Training(APIView):
     
 class ExerciseClass(APIView):
     def get(self, request, pk):
-        print(pk)
+        # print(pk)
         try:
             exercise = Exercise.objects.get(id=pk)
         
             serializer = ExerciseShowSerializer(exercise)
-            print(serializer.data, 'exercise find')
+            # print(serializer.data, 'exercise find')
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exercise.DoesNotExist:
             return Response({'error': 'No valid items found'}, status=status.HTTP_404_NOT_FOUND)
@@ -441,7 +442,7 @@ class Goal(APIView):
     def post(self, request):
         user = request.user
         data = request.data
-        print(data)
+        # print(data)
         # Получаем или создаём объект без сохранения
         try:
             wish_body = WishBodyResult.objects.get(user=user)

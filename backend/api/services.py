@@ -23,7 +23,7 @@ class TelegramAuthService:
     def authenticate(self, init_data: dict, request: HttpRequest) -> Optional[User]:
         """Проверка подписи и вход/создание пользователя"""
 
-        print(init_data)
+        # print(init_data)
         
         if not verify_telegram_signature(init_data, self.bot_token):
             return None
@@ -56,7 +56,7 @@ class TelegramAuthService:
         )
         
         login(request, user)
-        print('login auth fing',user.is_authenticated)
+        # print('login auth fing',user.is_authenticated)
         # Генерируем JWT токены
         
         
