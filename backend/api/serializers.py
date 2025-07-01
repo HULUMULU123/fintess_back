@@ -55,16 +55,20 @@ class WorkoutSerializer(serializers.ModelSerializer):
     completed_exercise_count = serializers.SerializerMethodField()
     superset_count = serializers.SerializerMethodField()
     completed_superset_count = serializers.SerializerMethodField()
-    exercises = serializers.SerializerMethodField()  # Переопределяем
+    exercises = serializers.SerializerMethodField()
     supersets = serializers.SerializerMethodField()
+    
+    previous_workout = serializers.SerializerMethodField()  # новое поле
+
     class Meta:
         model = Workout
         fields = ['id',
             'day', 'weekday',
-            'workout_type',  'exercises', 'supersets',
+            'workout_type', 'exercises', 'supersets',
             'exercise_count', 'completed_exercise_count',
             'superset_count', 'completed_superset_count',
-            'month', 
+            'month',
+            'previous_workout',  # добавляем поле в вывод
         ]
 
     def get_month(self, obj):
@@ -82,7 +86,6 @@ class WorkoutSerializer(serializers.ModelSerializer):
         }
         return weekdays.get(obj.day.weekday(), "")
 
-    
     def get_exercise_count(self, obj):
         try:
             return obj.exercises.count()
@@ -110,7 +113,14 @@ class WorkoutSerializer(serializers.ModelSerializer):
         workout_supersets = obj.workoutsuperset_set.all()
         serializer = WorkoutSuperSetSerializer(workout_supersets, many=True)
         return serializer.data
-    
+
+    def get_previous_workout(self, obj):
+        # Поиск предыдущей тренировки — той, у которой день меньше текущего
+        previous = Workout.objects.filter(day__lt=obj.day).order_by('-day').first()
+        if previous:
+            return WorkoutSerializer(previous).data
+        return None
+
 class WorkoutDaySerializer(serializers.ModelSerializer):
     class Meta:
         model = Workout
