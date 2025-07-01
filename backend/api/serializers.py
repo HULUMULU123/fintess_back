@@ -17,7 +17,7 @@ class WorkoutExerciseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WorkoutExercise
-        fields = ['id', 'exercise', 'is_completed', 'repetitions', 'weight']
+        fields = ['id', 'exercise', 'is_completed', 'repetitions', 'weight', 'description']
 
 class SuperSetExerciseShortSerializer(serializers.ModelSerializer):
     exercise_name = serializers.CharField(source='exercise.name')
