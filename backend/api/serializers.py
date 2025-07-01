@@ -33,7 +33,7 @@ class WorkoutSuperSetExerciseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WorkoutSuperSetExercise
-        fields = ['id', 'exercise_name', 'repetitions', 'weight', 'order']
+        fields = ['id', 'exercise_name', 'repetitions', 'weight', 'order', 'description']
 
 
 class WorkoutSuperSetSerializer(serializers.ModelSerializer):
