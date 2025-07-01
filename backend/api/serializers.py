@@ -115,11 +115,85 @@ class WorkoutSerializer(serializers.ModelSerializer):
         return serializer.data
 
     def get_previous_workout(self, obj):
-        # Поиск предыдущей тренировки — той, у которой день меньше текущего
-        previous = Workout.objects.filter(day__lt=obj.day).order_by('-day').first()
+        # Поиск предыдущей тренировки текущего пользователя
+        previous = Workout.objects.filter(
+            user=obj.user,      # фильтрация по пользователю
+            day__lt=obj.day     # только тренировки с датой раньше текущей
+        ).order_by('-day').first()
+        
         if previous:
-            return WorkoutSerializer(previous).data
+            return PreviousWorkoutSerializer(previous).data
         return None
+
+
+class PreviousWorkoutSerializer(serializers.ModelSerializer):
+    month = serializers.SerializerMethodField()
+    weekday = serializers.SerializerMethodField()
+    
+    exercise_count = serializers.SerializerMethodField()
+    completed_exercise_count = serializers.SerializerMethodField()
+    superset_count = serializers.SerializerMethodField()
+    completed_superset_count = serializers.SerializerMethodField()
+    exercises = serializers.SerializerMethodField()
+    supersets = serializers.SerializerMethodField()
+    
+    
+
+    class Meta:
+        model = Workout
+        fields = ['id',
+            'day', 'weekday',
+            'workout_type', 'exercises', 'supersets',
+            'exercise_count', 'completed_exercise_count',
+            'superset_count', 'completed_superset_count',
+            'month',
+              # добавляем поле в вывод
+        ]
+
+    def get_month(self, obj):
+        months = {
+            1: "Января", 2: "Февраля", 3: "Марта", 4: "Апреля",
+            5: "Мая", 6: "Июня", 7: "Июля", 8: "Августа",
+            9: "Сентября", 10: "Октября", 11: "Ноября", 12: "Декабря"
+        }
+        return months.get(obj.day.month, "")
+
+    def get_weekday(self, obj):
+        weekdays = {
+            0: "Понедельник", 1: "Вторник", 2: "Среда", 3: "Четверг",
+            4: "Пятница", 5: "Суббота", 6: "Воскресенье"
+        }
+        return weekdays.get(obj.day.weekday(), "")
+
+    def get_exercise_count(self, obj):
+        try:
+            return obj.exercises.count()
+        except AttributeError:
+            return 0
+
+    def get_completed_exercise_count(self, obj):
+        return obj.workoutexercise_set.filter(is_completed=True).count()
+    
+    def get_superset_count(self, obj):
+        try:
+            return obj.supersets.count()
+        except AttributeError:
+            return 0
+
+    def get_completed_superset_count(self, obj):
+        return obj.workoutsuperset_set.filter(is_completed=True).count()
+
+    def get_exercises(self, obj):
+        workout_exercises = obj.workoutexercise_set.all()
+        serializer = WorkoutExerciseSerializer(workout_exercises, many=True)
+        return serializer.data
+    
+    def get_supersets(self, obj):
+        workout_supersets = obj.workoutsuperset_set.all()
+        serializer = WorkoutSuperSetSerializer(workout_supersets, many=True)
+        return serializer.data
+
+    
 
 class WorkoutDaySerializer(serializers.ModelSerializer):
     class Meta:
