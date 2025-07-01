@@ -78,14 +78,14 @@ class WorkoutSuperSetExerciseForm(forms.ModelForm):
 class WorkoutExerciseInline(nested_admin.NestedTabularInline):
     model = WorkoutExercise
     extra = 1
-    fields = ("exercise", "is_completed", "repetitions", "weight")
+    fields = ("exercise", "is_completed", "repetitions", "weight", 'description')
 
 
 # 3) Inline для упражнений внутри суперсета, с нашей формой
 class WorkoutSuperSetExerciseInline(nested_admin.NestedTabularInline):
     model = WorkoutSuperSetExercise
     extra = 0
-    fields = ("superset_exercise", "repetitions", "weight")
+    fields = ("superset_exercise", "repetitions", "weight", 'description')
     
     class Media:
         js = ("admin/js/custom_filter_superset.js",)
