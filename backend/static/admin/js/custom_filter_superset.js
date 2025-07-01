@@ -33,12 +33,12 @@ document.addEventListener("DOMContentLoaded", function () {
 /* Для маленьких экранов */
 @media (max-width: 768px) {
  .inline-group td input,
-  td .selection {
-  display: inline-block;
-    width: 100px;
+  tr {
+    flex-direction:column;
+    
   }
-}
-}
+
+
 
   th.original {
   display:none;}
