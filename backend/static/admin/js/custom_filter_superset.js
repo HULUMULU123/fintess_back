@@ -21,6 +21,9 @@ document.addEventListener("DOMContentLoaded", function () {
     font-size: 0.875rem;
 }
 
+td.original{
+display:none;}
+
 .inline-related table.tabular tr.form-row td input,
 .inline-related table.tabular tr.form-row td select {
     width: 100%;
