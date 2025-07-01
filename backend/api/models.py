@@ -79,7 +79,7 @@ class WorkoutExercise(models.Model):
     is_completed = models.BooleanField(default=False)
     repetitions = models.PositiveIntegerField(null=True, blank=True)
     weight = models.FloatField(null=True, blank=True)
-
+    description = models.CharField(max_length=200)
     class Meta:
         ordering = ['weight']
         unique_together = ('workout', 'exercise')
@@ -105,7 +105,7 @@ class WorkoutSuperSetExercise(models.Model):
     superset_exercise = models.ForeignKey('SuperSetExercise', on_delete=models.CASCADE)
     repetitions = models.PositiveIntegerField(null=True, blank=True)
     weight = models.FloatField(null=True, blank=True)
-
+    description = models.CharField(max_length=200)
     class Meta:
         verbose_name = "Упражнение в суперсете тренировки"
         verbose_name_plural = "Упражнения в суперсете тренировки"
