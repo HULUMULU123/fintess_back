@@ -21,19 +21,19 @@ class WorkoutExerciseSerializer(serializers.ModelSerializer):
 
 class SuperSetExerciseShortSerializer(serializers.ModelSerializer):
     exercise_name = serializers.CharField(source='exercise.name')
-
+    exercise_id = serializers.CharField(source='exercise.id')
     class Meta:
         model = SuperSetExercise
-        fields = ['id', 'exercise_name', 'order']
+        fields = ['id', 'exercise_name', 'exercise_id', 'order']
 
 
 class WorkoutSuperSetExerciseSerializer(serializers.ModelSerializer):
     exercise_name = serializers.CharField(source='superset_exercise.exercise.name')
     order = serializers.IntegerField(source='superset_exercise.order')
-
+    exercise_id = serializers.CharField(source='superset_exercise.exercise.id') 
     class Meta:
         model = WorkoutSuperSetExercise
-        fields = ['id', 'exercise_name', 'repetitions', 'weight', 'order', 'description']
+        fields = ['id', 'exercise_name','exercise_id', 'repetitions', 'weight', 'order', 'description']
 
 
 class WorkoutSuperSetSerializer(serializers.ModelSerializer):
