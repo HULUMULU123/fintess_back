@@ -386,13 +386,14 @@ class Training(APIView):
     def post(self, request):
         exercise_ids = request.data.get('ids')
         superset_ids = request.data.get('superset_ids')
-
+        updated_exercises = request.data.get('updated_exercises')
         if exercise_ids and not isinstance(exercise_ids, list):
             return Response({'error': 'Expected a list for "ids"'}, status=status.HTTP_400_BAD_REQUEST)
         
         if superset_ids and not isinstance(superset_ids, list):
             return Response({'error': 'Expected a list for "superset_ids"'}, status=status.HTTP_400_BAD_REQUEST)
-
+        if updated_exercises and not isinstance(updated_exercises, dict):
+            return Response({'error': 'Oh no"'}, status=status.HTTP_400_BAD_REQUEST)
         updated_workouts = set()
 
         # Обработка упражнений
@@ -405,7 +406,18 @@ class Training(APIView):
                     updated_workouts.add(workout_exercise.workout)
                 except WorkoutExercise.DoesNotExist:
                     continue  # можно логировать
-
+        if updated_exercises:
+            for data in updated_exercises:
+                try:
+                    workout_exercise = WorkoutExercise.objects.get(id=data["id"])
+                    if "weight" in data:
+                        workout_exercise.weight = data["weight"]
+                    if "repetitions" in data:
+                        workout_exercise.repetitions = data["repetitions"]
+                    workout_exercise.save()
+                    updated_workouts.add(workout_exercise.workout)
+                except WorkoutExercise.DoesNotExist:
+                    continue  # можно логировать
         # Обработка суперсетов
         if superset_ids:
             for pk in superset_ids:
@@ -416,7 +428,7 @@ class Training(APIView):
                     updated_workouts.add(superset.workout)
                 except WorkoutSuperSet.DoesNotExist:
                     continue  # можно логировать
-
+        
         # Возвращаем обновлённую тренировку
         if updated_workouts:
             workout = updated_workouts.pop()
