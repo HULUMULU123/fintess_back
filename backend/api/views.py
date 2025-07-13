@@ -392,7 +392,7 @@ class Training(APIView):
         
         if superset_ids and not isinstance(superset_ids, list):
             return Response({'error': 'Expected a list for "superset_ids"'}, status=status.HTTP_400_BAD_REQUEST)
-        if updated_exercises and not isinstance(updated_exercises, dict):
+        if updated_exercises and not isinstance(updated_exercises, list):
             return Response({'error': 'Oh no"'}, status=status.HTTP_400_BAD_REQUEST)
         updated_workouts = set()
 
