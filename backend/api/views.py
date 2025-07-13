@@ -410,9 +410,9 @@ class Training(APIView):
             for data in updated_exercises:
                 try:
                     workout_exercise = WorkoutExercise.objects.get(id=data["id"])
-                    if "weight" in data:
+                    if "weight" in data and data["weight"] is not None:
                         workout_exercise.weight = data["weight"]
-                    if "repetitions" in data:
+                    if "repetitions" in data and data["repetitions"] is not None:
                         workout_exercise.repetitions = data["repetitions"]
                     workout_exercise.save()
                     updated_workouts.add(workout_exercise.workout)
