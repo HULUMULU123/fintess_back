@@ -142,6 +142,16 @@ class WorkoutAdmin(nested_admin.NestedModelAdmin):
             "widget": TimeInput(format="%H:%M", attrs={"type": "time"})
         }
     }
+
+    def user_first_name(self, obj):
+        return obj.user.first_name
+    user_first_name.admin_order_field = "user__first_name"
+    user_first_name.short_description = "Имя"
+
+    def user_last_name(self, obj):
+        return obj.user.last_name
+    user_last_name.admin_order_field = "user__last_name"
+    user_last_name.short_description = "Фамилия"
     def duplicate_workouts(self, request, queryset):
         count = 0
         for obj in queryset:
