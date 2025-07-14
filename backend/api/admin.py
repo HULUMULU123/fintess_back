@@ -126,7 +126,16 @@ class WorkoutSuperSetInline(nested_admin.NestedStackedInline):
 @admin.register(Workout)
 class WorkoutAdmin(nested_admin.NestedModelAdmin):
     inlines = [WorkoutExerciseInline, WorkoutSuperSetInline]
-    list_display = ("day",)
+    list_display = ("day", "user_first_name", "user_last_name")
+    
+    # Поля для поиска по имени и фамилии пользователя
+    search_fields = [
+        "user__first_name",
+        "user__last_name",
+    ]
+    
+    # Можно сортировать по полям пользователя
+    ordering = ["user__first_name", "user__last_name", "day"]
     actions = ["duplicate_workouts", "duplicate_with_params"]
     formfield_overrides = {
         models.TimeField: {
