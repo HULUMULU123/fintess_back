@@ -12,7 +12,7 @@ from django.utils.decorators import method_decorator
 from django.utils import timezone
 from django.utils.timezone import make_aware
 from rest_framework.permissions import IsAuthenticated
-from .models import Quote, Workout, BodyMeasurement, WishBodyResult, ProgressPhoto, Vitamin, WorkoutExercise, WorkoutSuperSet, UserVitamin, Exercise
+from .models import Quote, Workout, BodyMeasurement, WishBodyResult, ProgressPhoto, Vitamin, WorkoutExercise, WorkoutSuperSet, UserVitamin, Exercise, WorkoutSuperSetExercise
 from .serializers import WorkoutSerializer, QuoteSerializer, WorkoutDaySerializer, BodyMeasurementSerializer, PhotoSerializer, VitaminSerializer, UserVitaminSerializer, ExerciseShowSerializer, WishBodyResultSerializer
 
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -387,12 +387,15 @@ class Training(APIView):
         exercise_ids = request.data.get('ids')
         superset_ids = request.data.get('superset_ids')
         updated_exercises = request.data.get('updated_exercises')
+        updated_supersets = request.data.get('updated_supersets')
         if exercise_ids and not isinstance(exercise_ids, list):
             return Response({'error': 'Expected a list for "ids"'}, status=status.HTTP_400_BAD_REQUEST)
         
         if superset_ids and not isinstance(superset_ids, list):
             return Response({'error': 'Expected a list for "superset_ids"'}, status=status.HTTP_400_BAD_REQUEST)
         if updated_exercises and not isinstance(updated_exercises, list):
+            return Response({'error': 'Oh no"'}, status=status.HTTP_400_BAD_REQUEST)
+        if updated_supersets and not isinstance(updated_exercises, list):
             return Response({'error': 'Oh no"'}, status=status.HTTP_400_BAD_REQUEST)
         updated_workouts = set()
 
@@ -428,7 +431,21 @@ class Training(APIView):
                     updated_workouts.add(superset.workout)
                 except WorkoutSuperSet.DoesNotExist:
                     continue  # можно логировать
-        
+        if updated_supersets:
+            for data in updated_supersets:
+                try:
+                    workout_superset_ex = WorkoutSuperSetExercise.objects.get(id=data["id"])
+                    
+                    if "weight" in data and data["weight"] is not None:
+                        workout_superset_ex.weight = data["weight"]
+                    if "repetitions" in data and data["repetitions"] is not None:
+                        workout_superset_ex.repetitions = data["repetitions"]
+                    
+                    workout_superset_ex.save()
+                    updated_workouts.add(workout_superset_ex.workout_superset.workout)
+                
+                except WorkoutSuperSetExercise.DoesNotExist:
+                    continue  # можно логировать
         # Возвращаем обновлённую тренировку
         if updated_workouts:
             workout = updated_workouts.pop()
