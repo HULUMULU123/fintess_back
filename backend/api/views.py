@@ -439,8 +439,10 @@ class Training(APIView):
                     workout_superset_ex = WorkoutSuperSetExercise.objects.get(id=data["id"])
                     print(workout_superset_ex)
                     print(data['id'], data['weight'])
+                    print(workout_superset_ex.weight)
                     if "weight" in data and data["weight"] is not None:
                         print(data['weight'], 'test', workout_superset_ex.weight)
+                        print(data['weight'], 'test', workout_superset_ex.description)
                         workout_superset_ex.weight = data["weight"]
                        
                     if "repetitions" in data and data["repetitions"] is not None:
