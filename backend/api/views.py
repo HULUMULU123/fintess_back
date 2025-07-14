@@ -438,13 +438,14 @@ class Training(APIView):
                 try:
                     workout_superset_ex = WorkoutSuperSetExercise.objects.get(id=data["id"])
                     print(workout_superset_ex)
+                    print(data['id'], data['weight'])
                     if "weight" in data and data["weight"] is not None:
                         workout_superset_ex.weight = data["weight"]
                     if "repetitions" in data and data["repetitions"] is not None:
                         workout_superset_ex.repetitions = data["repetitions"]
                     
                     workout_superset_ex.save()
-                    updated_workouts.add(workout_superset_ex.workout_superset.workout)
+                    # updated_workouts.add(workout_superset_ex.workout_superset.workout)
                 
                 except WorkoutSuperSetExercise.DoesNotExist:
                     continue  # можно логировать
