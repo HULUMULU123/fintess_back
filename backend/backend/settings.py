@@ -165,7 +165,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 CSRF_TRUSTED_ORIGINS = [
     
-    'basyukcoach.ru', 'www.basyukcoach.ru'
+    'https://basyukcoach.ru', 'https://www.basyukcoach.ru'
     
 ]
 
