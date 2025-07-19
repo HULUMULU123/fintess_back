@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Workout, Quote, Exercise, WorkoutExercise, BodyMeasurement, ProgressPhoto, Vitamin, SuperSetExercise, WorkoutSuperSetExercise, WorkoutSuperSet, UserVitamin, WishBodyResult
+from .models import Workout, Quote, Exercise, WorkoutExercise, BodyMeasurement, ProgressPhoto, Vitamin, SuperSetExercise, WorkoutSuperSetExercise, WorkoutSuperSet, UserVitamin, WishBodyResult, Questionnaire, Attachment
 
 class ExerciseShowSerializer(serializers.ModelSerializer):
     class Meta:
@@ -293,3 +293,15 @@ class WishBodyResultSerializer(serializers.ModelSerializer):
         if measurement:
             return measurement.weight
         return None
+    
+class AttachmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Attachment
+        fields = ['file']
+
+class QuestionnaireSerializer(serializers.ModelSerializer):
+    attachments = AttachmentSerializer(many=True, required=False, read_only=True)
+
+    class Meta:
+        model = Questionnaire
+        fields = '__all__'

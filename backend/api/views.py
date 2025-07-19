@@ -12,8 +12,8 @@ from django.utils.decorators import method_decorator
 from django.utils import timezone
 from django.utils.timezone import make_aware
 from rest_framework.permissions import IsAuthenticated
-from .models import Quote, Workout, BodyMeasurement, WishBodyResult, ProgressPhoto, Vitamin, WorkoutExercise, WorkoutSuperSet, UserVitamin, Exercise, WorkoutSuperSetExercise
-from .serializers import WorkoutSerializer, QuoteSerializer, WorkoutDaySerializer, BodyMeasurementSerializer, PhotoSerializer, VitaminSerializer, UserVitaminSerializer, ExerciseShowSerializer, WishBodyResultSerializer
+from .models import Quote, Workout, BodyMeasurement, WishBodyResult, ProgressPhoto, Vitamin, WorkoutExercise, WorkoutSuperSet, UserVitamin, Exercise, WorkoutSuperSetExercise,Questionnaire,Attachment
+from .serializers import WorkoutSerializer, QuoteSerializer, WorkoutDaySerializer, BodyMeasurementSerializer, PhotoSerializer, VitaminSerializer, UserVitaminSerializer, ExerciseShowSerializer, WishBodyResultSerializer, QuestionnaireSerializer
 
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -502,3 +502,18 @@ class Goal(APIView):
 
         serializer = WishBodyResultSerializer(wish_body, context={"request": request})
         return Response(serializer.data, status=status_code)
+    
+class QuestionnaireCreateView(APIView):
+    def post(self, request, *args, **kwargs):
+        data = request.data.copy()
+        files = request.FILES.getlist('attachments')
+
+        serializer = QuestionnaireSerializer(data=data)
+        if serializer.is_valid():
+            questionnaire = serializer.save()
+
+            for f in files:
+                Attachment.objects.create(questionnaire=questionnaire, file=f)
+
+            return Response({'message': 'Анкета успешно сохранена'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

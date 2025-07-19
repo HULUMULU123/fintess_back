@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.forms import TimeInput
 from django.db import models
-from .models import CustomUser, Workout, Exercise, WorkoutExercise, Vitamin, UserVitamin, ExerciseSet, ExerciseInSet, ProgressPhoto, Quote, BodyMeasurement, WishBodyResult, WorkoutSuperSetExercise, WorkoutSuperSet, SuperSetExercise, SuperSet
+from .models import CustomUser, Workout, Exercise, WorkoutExercise, Vitamin, UserVitamin, ExerciseSet, ExerciseInSet, ProgressPhoto, Quote, BodyMeasurement, WishBodyResult, WorkoutSuperSetExercise, WorkoutSuperSet, SuperSetExercise, SuperSet, Questionnaire, Attachment
 from django.contrib.auth.admin import UserAdmin
 from adminsortable2.admin import SortableAdminBase, SortableTabularInline
 from django import forms
@@ -293,3 +293,19 @@ class SuperSetExerciseInline(admin.TabularInline):
 class SuperSetAdmin(admin.ModelAdmin):
     inlines = [SuperSetExerciseInline]
     list_display = ('name',)
+
+@admin.register(Questionnaire)
+class QuestionnaireAdmin(admin.ModelAdmin):
+    list_display = ('full_name', 'created_at')  # Колонки в таблице
+    search_fields = ('full_name',)              # Поиск по ФИО
+    list_filter = ('created_at',)               # Фильтр по дате
+    ordering = ('-created_at',)                 # Сортировка по дате (по убыванию)
+    readonly_fields = ('created_at',)
+
+    # Если хочешь вложенные файлы отображать — можно использовать inlines:
+    # Но это опционально
+    class AttachmentInline(admin.TabularInline):
+        model = Attachment
+        extra = 0
+
+    inlines = [AttachmentInline]

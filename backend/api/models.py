@@ -287,3 +287,39 @@ class WishBodyResult(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='wish_body')
     weight = models.FloatField('Желаемый вес, кг')
     photo_front = models.ImageField('Фотография', upload_to='wish/')
+
+
+
+
+class Questionnaire(models.Model):
+    full_name = models.CharField(max_length=255)
+    age_height_weight = models.TextField()
+    location = models.CharField(max_length=255)
+    contacts = models.CharField(max_length=255)
+    goals = models.TextField()
+    injections_allowed = models.CharField(max_length=255)
+    recent_tests = models.TextField()
+    complaints = models.TextField()
+    diseases = models.TextField()
+    physical_activity = models.TextField()
+    sleep = models.TextField()
+    nutrition = models.TextField()
+    medications = models.TextField()
+    children = models.TextField(blank=True, null=True)
+    relatives_diseases = models.TextField()
+    day_schedule = models.TextField()
+    water_intake = models.TextField()
+    stool = models.TextField()
+    urination = models.TextField()
+    alcohol = models.TextField()
+    smoking = models.TextField()
+    stress_level = models.CharField(max_length=10)
+    sport_experience = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.full_name
+
+class Attachment(models.Model):
+    questionnaire = models.ForeignKey(Questionnaire, on_delete=models.CASCADE, related_name='attachments')
+    file = models.FileField(upload_to='questionnaire_attachments/')
