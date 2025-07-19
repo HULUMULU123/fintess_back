@@ -503,26 +503,30 @@ class Goal(APIView):
         serializer = WishBodyResultSerializer(wish_body, context={"request": request})
         return Response(serializer.data, status=status_code)
     
+def camel_to_snake(name):
+    import re
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+
 class QuestionnaireCreateView(APIView):
     def post(self, request, *args, **kwargs):
-        # request.data уже содержит и поля, и файлы (если multipart)
-        # Скопируем для сериализатора только данные без файлов
         data = request.data.copy()
-        files = request.FILES.getlist('attachments')  # убедись, что ключ 'attachments' совпадает с тем, что присылает клиент
 
-        print("DATA:", data)
-        print("FILES:", files)
+        # Преобразуем ключи к snake_case
+        new_data = {}
+        for key in data.keys():
+            new_key = camel_to_snake(key)
+            new_data[new_key] = data.get(key)
 
-        serializer = QuestionnaireSerializer(data=data)
+        files = request.FILES.getlist('attachments')
+
+        serializer = QuestionnaireSerializer(data=new_data)
         if serializer.is_valid():
-            print('valid')
             questionnaire = serializer.save()
 
-            # Сохраняем файлы, если есть
             for f in files:
                 Attachment.objects.create(questionnaire=questionnaire, file=f)
 
             return Response({'message': 'Анкета успешно сохранена'}, status=status.HTTP_201_CREATED)
-        else:
-            print('не валидно', serializer.errors)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
