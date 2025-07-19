@@ -42,7 +42,7 @@ class TelegramLoginView(APIView):
     def post(self, request):
         init_data = request.data
         
-        auth_service = TelegramAuthService(bot_token="7675575306:AAG9icLANXqUrfllrh-XFR0Njf-MncE2iPc")
+        auth_service = TelegramAuthService(bot_token="8046389790:AAEJtYOY7zQ4olXyZA-ljwniX5qBxRdnO7w")
         user = auth_service.authenticate(init_data, request)
         
         if user is None:
