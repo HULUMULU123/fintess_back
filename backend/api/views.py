@@ -519,7 +519,8 @@ class QuestionnaireCreateView(APIView):
             new_data[new_key] = data.get(key)
 
         files = request.FILES.getlist('attachments')
-
+        print("DATA:", data)
+        print("FILES:", files)
         serializer = QuestionnaireSerializer(data=new_data)
         if serializer.is_valid():
             questionnaire = serializer.save()
