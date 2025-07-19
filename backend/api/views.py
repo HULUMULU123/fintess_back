@@ -505,17 +505,24 @@ class Goal(APIView):
     
 class QuestionnaireCreateView(APIView):
     def post(self, request, *args, **kwargs):
+        # request.data уже содержит и поля, и файлы (если multipart)
+        # Скопируем для сериализатора только данные без файлов
         data = request.data.copy()
-        files = request.FILES.getlist('attachments')
-        print(data, files)
+        files = request.FILES.getlist('attachments')  # убедись, что ключ 'attachments' совпадает с тем, что присылает клиент
+
+        print("DATA:", data)
+        print("FILES:", files)
+
         serializer = QuestionnaireSerializer(data=data)
         if serializer.is_valid():
             print('valid')
             questionnaire = serializer.save()
 
+            # Сохраняем файлы, если есть
             for f in files:
                 Attachment.objects.create(questionnaire=questionnaire, file=f)
 
             return Response({'message': 'Анкета успешно сохранена'}, status=status.HTTP_201_CREATED)
-        print('ne valid')
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            print('не валидно', serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
