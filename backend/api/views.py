@@ -510,10 +510,12 @@ class QuestionnaireCreateView(APIView):
         print(data, files)
         serializer = QuestionnaireSerializer(data=data)
         if serializer.is_valid():
+            print('valid')
             questionnaire = serializer.save()
 
             for f in files:
                 Attachment.objects.create(questionnaire=questionnaire, file=f)
 
             return Response({'message': 'Анкета успешно сохранена'}, status=status.HTTP_201_CREATED)
+        print('ne valid')
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
