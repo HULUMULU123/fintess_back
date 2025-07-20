@@ -91,6 +91,9 @@ class WorkoutExercise(models.Model):
 
 
 class WorkoutSuperSet(models.Model):
+    class Meta:
+        verbose_name = 'Суперсет'
+        verbose_name_plural = 'Суперсеты'
     workout = models.ForeignKey(Workout, on_delete=models.CASCADE)
     superset = models.ForeignKey('SuperSet', on_delete=models.CASCADE)
     is_completed = models.BooleanField(default=False)
@@ -292,6 +295,9 @@ class WishBodyResult(models.Model):
 
 
 class Questionnaire(models.Model):
+    class Meta:
+        verbose_name = 'Анкета'
+        verbose_name_plural = 'Анекеты'
     full_name = models.CharField(max_length=255)
     age_height_weight = models.TextField()
     location = models.CharField(max_length=255)
