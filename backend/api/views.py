@@ -264,7 +264,7 @@ class ShowBodyStatistic(APIView):
         if not user.is_authenticated:
             return Response({"detail": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
 
-        data = request.data.copy()
+        data = request.data
         data['user'] = user.id
         data['created_at'] = timezone.localdate()
 
@@ -317,7 +317,7 @@ class ShowProgressPhoto(APIView):
         if not user.is_authenticated:
             return Response({"detail": "Unauthorized"}, status=401)
         
-        data = request.data.copy()
+        data = request.data
         data['user'] = user.id
         data['date'] = timezone.localdate()
         
@@ -510,7 +510,7 @@ def camel_to_snake(name):
 
 class QuestionnaireCreateView(APIView):
     def post(self, request, *args, **kwargs):
-        data = request.data.copy()
+        data = request.data
 
         # Преобразуем ключи к snake_case
         new_data = {}
