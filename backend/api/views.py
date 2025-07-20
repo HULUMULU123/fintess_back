@@ -264,7 +264,7 @@ class ShowBodyStatistic(APIView):
         if not user.is_authenticated:
             return Response({"detail": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
 
-        data = request.data
+        data = request.data.copy()
         data['user'] = user.id
         data['created_at'] = timezone.localdate()
 
