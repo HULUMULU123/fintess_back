@@ -17,7 +17,7 @@ class CustomUser(AbstractUser):
 
 class Exercise(models.Model):
     name = models.CharField('Название упражнения', max_length=200)
-    description = models.TextField('Описание')
+    description = models.TextField('Описание', null=True)
     difficulty = models.CharField(
         'Сложность',
         max_length=20,
