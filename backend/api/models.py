@@ -79,7 +79,7 @@ class WorkoutExercise(models.Model):
     is_completed = models.BooleanField(default=False)
     repetitions = models.PositiveIntegerField(null=True, blank=True)
     weight = models.FloatField(null=True, blank=True)
-    description = models.CharField(max_length=200, null=True)
+    description = models.CharField(max_length=200, null=True, blank=True)
     class Meta:
         ordering = ['weight']
         unique_together = ('workout', 'exercise')
